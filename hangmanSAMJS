@@ -1,0 +1,115 @@
+#include <iostream>
+#include <iomanip>
+#include <cstdlib> // for system("cls")
+#include <ctime>   // for srand() and rand()
+#include <cctype>  // for tolower()
+using namespace std;
+
+void game(int x);
+void miss(int a);
+void getdisplay() {
+    cout << "           _____" << endl;
+    cout << "           ||=====================================||" << endl;
+    cout << "           ||               HANGMAN               ||" << endl;
+    cout << "           ||=====================================||" << endl;
+    cout << "           ||       GUESS CORRECTLY OR WATCH      ||" << endl;
+    cout << "           ||         YOUR FRIEND DIE !!!!        ||" << endl;
+    cout << "           ||=====================================||" << endl;
+    cout << "           ||||__||_||" << endl;
+    cout << "    ||====================================================||" << endl;
+    cout << "    ||                   INSTRUCTIONS                     ||" << endl;
+    cout << "    ||====================================================||" << endl;
+    cout << "    || 1. In this game you have to guess a word.          ||" << endl;
+    cout << "    || 2. You will be given 7 attempts to guess a word.   ||" << endl;
+    cout << "    || 3. Incorrect guesses will use up your attempts.    ||" << endl;
+    cout << "    || 4. Guess the word correctly to win the game.       ||" << endl;
+    cout << "    ||--------------------GOOD LUCK !!!-------------------||" << endl;
+    cout << "    ||====================================================||" << endl;
+    cout << "    ||         Press Enter to start the Game!!!!!!!        ||" << endl;
+    cout << "    ||______||" << endl << endl;
+}
+
+int main() {
+    getdisplay();
+    cin.get(); // wait for Enter
+
+    const int KEY_ARROW_CHAR1 = 224;
+    const int KEY_ARROW_UP = 72;
+    const int KEY_ARROW_DOWN = 80;
+    const int enter = 13;
+    
+    char input;
+    cin.get(input);  // Press any key to continue
+
+    if (input) {
+        system("cls"); // Clear screen (Windows only)
+        cout << "\nWELCOME TO THE HANGMAN GAME\nChoose your preferred genre to guess from\n";
+        cout << "=> Actors\nCountries\nTV shows/Movies\nCricketers\nFootballers\n\n";
+        
+        int genre_choice = 1;  // assuming the user navigates genres
+
+        while (1) {
+            // Here you can add the logic for capturing arrow keys and navigation
+            // For simplicity, let's assume the user selects a genre
+
+            game(genre_choice);  // Start the game
+            break;
+        }
+    }
+
+    return 0;
+}
+
+void miss(int a) {
+    // Display the hangman figure based on incorrect guesses (a)
+    cout << endl << endl << endl;
+    switch (a) {
+        case 0: cout << setw(28) << " +---+" << endl << setw(28) << "     |" << endl; break;
+        case 1: cout << setw(28) << " |   |" << endl; break;
+        // Add remaining cases for drawing the hangman as you did before
+    }
+}
+
+void game(int x) {
+    system("cls");
+
+    // Example of choosing a genre (Actors in this case)
+    if (x == 1) {
+        string actor = "leonardo dicaprio";  // Hardcoded for simplicity
+        string guessed_word(actor.length(), '_');
+
+        int remaining_attempts = 7;
+        while (remaining_attempts > 0) {
+            char guess;
+            cout << "Enter your guess: ";
+            cin >> guess;
+            guess = tolower(guess);  // Convert to lowercase
+
+            // Check if guess is correct
+            bool correct = false;
+            for (size_t i = 0; i < actor.length(); ++i) {
+                if (actor[i] == guess) {
+                    guessed_word[i] = guess;
+                    correct = true;
+                }
+            }
+
+            if (!correct) {
+                remaining_attempts--;
+                miss(remaining_attempts);  // Draw the hangman
+            }
+
+            cout << guessed_word << endl;
+
+            if (guessed_word == actor) {
+                cout << "Congratulations! You won!" << endl;
+                break;
+            }
+
+            if (remaining_attempts == 0) {
+                cout << "Game Over! The actor was: " << actor << endl;
+            }
+        }
+    }
+}
+
